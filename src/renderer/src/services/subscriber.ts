@@ -3,6 +3,7 @@ import { Subscriber } from '@renderer/models/Subscriber'
 export const getAllSubscribers = (): Array<Subscriber> => {
   const subscribers = [
     {
+      id: 1,
       name: '掘金热门',
       rssSource: 'https://rsshub.app/juejin/trending/frontend/monthly',
       tag: {
@@ -11,6 +12,7 @@ export const getAllSubscribers = (): Array<Subscriber> => {
       }
     },
     {
+      id: 2,
       name: 'dev.to 热门',
       rssSource: 'https://rsshub.app/dev.to/top/month',
       tag: {
