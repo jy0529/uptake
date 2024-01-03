@@ -2,6 +2,8 @@ import List from '@mui/joy/List'
 import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import Box from '@mui/joy/Box'
+import IconButton from '@mui/joy/IconButton'
+import Add from '@mui/icons-material/Add'
 import { Subscriber } from '@renderer/models/Subscriber'
 import { useEffect, useState } from 'react'
 import { useSubscriberStore } from '@renderer/store/subscriber'
@@ -25,6 +27,10 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
     setSelectedSubscriber(subscriber.rssSource)
   }
 
+  const addSubscriber = (): void => {
+    // TODO
+  }
+
   return (
     <Box>
       <h2>订阅者</h2>
@@ -33,6 +39,20 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
           maxWidth: 320
         }}
       >
+        <ListItem
+          startAction={
+            <IconButton size="sm" variant="plain" color="neutral">
+              <Add />
+            </IconButton>
+          }
+        >
+          <ListItemButton
+            {...{ selected: selectedSubscriber === '' }}
+            onClick={() => addSubscriber()}
+          >
+            添加订阅者
+          </ListItemButton>
+        </ListItem>
         {data.map((item) => (
           <ListItem key={item.rssSource}>
             <ListItemButton
