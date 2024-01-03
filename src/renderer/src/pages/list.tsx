@@ -5,38 +5,43 @@ import Typography from '@mui/joy/Typography'
 import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
 
-import { RSSResponse } from '@renderer/models/RSS'
+import { RSSItem } from '@renderer/models/RSS'
 import { readRSS } from '@renderer/services/rss'
-import { getAllSubscribers } from '@renderer/services/subscriber'
-import { Link as RouterLink , useLoaderData } from 'react-router-dom'
+import { Link as RouterLink, useLoaderData } from 'react-router-dom'
 import Link from '@mui/joy/Link'
+import { useSubscriberStore } from '@renderer/store/subscriber'
+import { useEffect, useState } from 'react'
 
 interface ListPageParams {
-  rssResponse: RSSResponse
-  subscriberId: number
+  subscriberId: string
 }
 export async function loader({ params }): Promise<ListPageParams> {
-  const subscribers = getAllSubscribers()
-  const subscriber = subscribers.find((item) => item.id == parseInt(params.subscriberId))
-  if (!subscriber) {
-    throw new Error('Subscriber not found')
-  }
-  const rssResponse = await readRSS(subscriber.rssSource)
   return {
-    subscriberId: params.subscriberId,
-    rssResponse: {
-      ...rssResponse,
-      items: rssResponse.items.filter((item) => item.guid != undefined && item.title != '')
-    }
+    subscriberId: params.subscriberId
   }
 }
 
 export function ListPage(): JSX.Element {
-  const { rssResponse, subscriberId } = useLoaderData() as ListPageParams
+  const { subscriberId } = useLoaderData() as ListPageParams
+  const subscribers = useSubscriberStore((state) => state.subscribers)
+  const subscriber = subscribers.find((item) => item.id == parseInt(subscriberId))
+  if (!subscriber) {
+    throw new Error('Subscriber not found')
+  }
+
+  const [items, setItems] = useState<RSSItem[]>([])
+
+  useEffect(() => {
+    const fetchRSS = async (): Promise<void> => {
+      const rssResponse = await readRSS(subscriber.rssSource)
+      setItems(rssResponse.items)
+    }
+    fetchRSS()
+  }, [])
 
   return (
     <List>
-      {rssResponse.items.map((item) => (
+      {items.map((item) => (
         <ListItem key={item.guid}>
           <ListItemContent>
             <Link component={RouterLink} to={`/detail/${subscriberId}/${item.title}`}>

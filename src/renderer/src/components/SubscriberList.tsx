@@ -3,20 +3,21 @@ import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import Box from '@mui/joy/Box'
 import { Subscriber } from '@renderer/models/Subscriber'
-import { getAllSubscribers } from '@renderer/services/subscriber'
 import { useEffect, useState } from 'react'
+import { useSubscriberStore } from '@renderer/store/subscriber'
 
 interface Props {
   changeSubscriber: (subscriber: Subscriber) => void
 }
 
 export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
-  const [data, setData] = useState<Subscriber[]>([])
   const [selectedSubscriber, setSelectedSubscriber] = useState<string>('')
 
+  const loadSubscribers = useSubscriberStore((state) => state.loadSubscribers)
+  const data = useSubscriberStore((state) => state.subscribers)
+
   useEffect(() => {
-    const data = getAllSubscribers()
-    setData(data)
+    loadSubscribers()
   }, [])
 
   const clickHandler = (subscriber: Subscriber): void => {

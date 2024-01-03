@@ -1,32 +1,46 @@
 import { RSSItem } from '@renderer/models/RSS'
 import { readRSS } from '@renderer/services/rss'
-import { getAllSubscribers } from '@renderer/services/subscriber'
 import { useLoaderData } from 'react-router-dom'
+import { useSubscriberStore } from '@renderer/store/subscriber'
+import { useEffect, useState } from 'react'
 
-export async function loader({ params }): Promise<{ rssItem: RSSItem }> {
+interface DetailPageParams {
+  subscriberId: string
+  title: string
+}
+
+export async function loader({ params }): Promise<DetailPageParams> {
   const { subscriberId, title } = params
-  const subscribers = getAllSubscribers()
-  const subscriber = subscribers.find((item) => item.id == parseInt(subscriberId))
-  if (!subscriber) {
-    throw new Error('Subscriber not found')
-  }
-  const rssResponse = await readRSS(subscriber.rssSource)
-  const item = rssResponse.items.find((item) => item.title == title)
-  if (!item) {
-    throw new Error('Item not found')
-  }
+
   return {
-    rssItem: item
+    subscriberId,
+    title
   }
 }
 
 export function DetailPage(): JSX.Element {
-  const { rssItem } = useLoaderData() as { rssItem: RSSItem }
+  const { subscriberId, title } = useLoaderData() as DetailPageParams
+  const subscribers = useSubscriberStore((state) => state.subscribers)
+  const subscriber = subscribers.find((item) => item.id === parseInt(subscriberId))
+  if (!subscriber) {
+    throw new Error('Subscriber not found')
+  }
+
+  const [item, setItem] = useState<RSSItem | undefined>()
+
+  useEffect(() => {
+    const fetchRSS = async (): Promise<void> => {
+      const rssResponse = await readRSS(subscriber.rssSource)
+      const item = rssResponse.items.find((item) => item.title == title)
+      setItem(item)
+    }
+    fetchRSS()
+  }, [])
 
   return (
     <section
       className="detail-page"
-      dangerouslySetInnerHTML={{ __html: rssItem.content }}
+      dangerouslySetInnerHTML={{ __html: item?.content ?? '' }}
     ></section>
   )
 }
