@@ -7,6 +7,8 @@ import Add from '@mui/icons-material/Add'
 import { Subscriber } from '@renderer/models/Subscriber'
 import { useEffect, useState } from 'react'
 import { useSubscriberStore } from '@renderer/store/subscriber'
+import Modal from '@mui/joy/Modal'
+import ModalDialog from '@mui/joy/ModalDialog'
 
 interface Props {
   changeSubscriber: (subscriber: Subscriber) => void
@@ -18,6 +20,8 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
   const loadSubscribers = useSubscriberStore((state) => state.loadSubscribers)
   const data = useSubscriberStore((state) => state.subscribers)
 
+  const [open, setOpen] = useState(false)
+
   useEffect(() => {
     loadSubscribers()
   }, [])
@@ -28,11 +32,19 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
   }
 
   const addSubscriber = (): void => {
-    // TODO
+    setOpen(true)
   }
 
   return (
     <Box>
+      <Modal
+        open={open}
+        onClose={() => {
+          setOpen(false)
+        }}
+      >
+        <ModalDialog>添加订阅者</ModalDialog>
+      </Modal>
       <h2>订阅者</h2>
       <List
         sx={{
