@@ -5,10 +5,14 @@ import Box from '@mui/joy/Box'
 import IconButton from '@mui/joy/IconButton'
 import Add from '@mui/icons-material/Add'
 import { Subscriber } from '@renderer/models/Subscriber'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSubscriberStore } from '@renderer/store/subscriber'
 import Modal from '@mui/joy/Modal'
 import ModalDialog from '@mui/joy/ModalDialog'
+import FormControl from '@mui/joy/FormControl'
+import FormLabel from '@mui/joy/FormLabel'
+import Input from '@mui/joy/Input'
+import Button from '@mui/joy/Button'
 
 interface Props {
   changeSubscriber: (subscriber: Subscriber) => void
@@ -31,8 +35,28 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
     setSelectedSubscriber(subscriber.rssSource)
   }
 
-  const addSubscriber = (): void => {
+  const addSubscriberAction = useSubscriberStore((state) => state.addSubscriber)
+  const [subscriber, setSubscriber] = useState<{
+    name: string
+    rssSource: string
+  }>({
+    name: '',
+    rssSource: ''
+  })
+
+  const addSubscriberHandler = (): void => {
     setOpen(true)
+  }
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    addSubscriberAction(subscriber)
+    setOpen(false)
+
+    // reset form
+    setSubscriber({
+      name: '',
+      rssSource: ''
+    })
   }
 
   return (
@@ -43,7 +67,33 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
           setOpen(false)
         }}
       >
-        <ModalDialog>添加订阅者</ModalDialog>
+        <ModalDialog>
+          <form onSubmit={handleSubmit}>
+            <FormControl>
+              <FormLabel>name:</FormLabel>
+              <Input
+                required
+                value={subscriber.name}
+                onChange={(e) => setSubscriber({ ...subscriber, name: e.target.value })}
+              />
+            </FormControl>
+            <Box>
+              <FormControl>
+                <FormLabel>rss:</FormLabel>
+                <Input
+                  required
+                  value={subscriber.rssSource}
+                  onChange={(e) => setSubscriber({ ...subscriber, rssSource: e.target.value })}
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <Button type="submit" variant="solid">
+                Submit
+              </Button>
+            </Box>
+          </form>
+        </ModalDialog>
       </Modal>
       <h2>订阅者</h2>
       <List
@@ -60,7 +110,7 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
         >
           <ListItemButton
             {...{ selected: selectedSubscriber === '' }}
-            onClick={() => addSubscriber()}
+            onClick={() => addSubscriberHandler()}
           >
             添加订阅者
           </ListItemButton>
