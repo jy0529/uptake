@@ -1,5 +1,6 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import * as RssAPI from '../db/rss'
 
 // Custom APIs for renderer
 const api = {}
@@ -11,6 +12,7 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('RssAPI', RssAPI)
   } catch (error) {
     console.error(error)
   }
@@ -20,5 +22,5 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api
   // @ts-ignore (define in dts)
-  window.axiosHttp = axiosHttp
+  window.RssAPI = RssAPI
 }

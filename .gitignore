@@ -2,3 +2,7 @@ node_modules
 dist
 out
 *.log*
+
+*.db
+*.db-shm
+*.db-wal

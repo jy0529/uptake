@@ -11,22 +11,10 @@ interface SubscriberState {
 export const useSubscriberStore = create<SubscriberState>((set) => ({
   subscribers: [],
   addSubscriber: (subscriber: SubscriberUIModel): void => {
-    // get last id
-    const lastId = useSubscriberStore.getState().subscribers.reduce((maxId, subscriber) => {
-      if (subscriber.id > maxId) {
-        return subscriber.id
-      }
-      return maxId
-    }, 0)
-
-    const newSubscriber: Subscriber = {
-      id: lastId + 1,
-      name: subscriber.name,
-      rssSource: subscriber.rssSource
-    }
-
-    set((state) => ({
-      subscribers: [...state.subscribers, newSubscriber]
+    window.RssAPI.addRSS(subscriber.name, subscriber.rssSource)
+    // reload subscribers
+    set(() => ({
+      subscribers: getAllSubscribers()
     }))
   },
   loadSubscribers: (): void => {

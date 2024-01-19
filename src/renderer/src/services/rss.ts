@@ -12,7 +12,6 @@ const rssParser = new Parser({
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const readRSS = async (url: string): Promise<RSSResponse> => {
   return await rssParser.parseURL(url)
 }
