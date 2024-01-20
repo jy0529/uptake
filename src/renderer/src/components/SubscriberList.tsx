@@ -67,19 +67,35 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
           setOpen(false)
         }}
       >
-        <ModalDialog>
+        <ModalDialog className="w-96 h-auto">
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <FormLabel>name:</FormLabel>
+              <FormLabel
+                required={true}
+                sx={{
+                  fontWeight: 'bold',
+                  fontSize: '16px'
+                }}
+              >
+                name:
+              </FormLabel>
               <Input
                 required
                 value={subscriber.name}
                 onChange={(e) => setSubscriber({ ...subscriber, name: e.target.value })}
               />
             </FormControl>
-            <Box>
+            <Box className="mt-4">
               <FormControl>
-                <FormLabel>rss:</FormLabel>
+                <FormLabel
+                  required={true}
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                  }}
+                >
+                  rss:
+                </FormLabel>
                 <Input
                   required
                   value={subscriber.rssSource}
@@ -87,7 +103,7 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
                 />
               </FormControl>
             </Box>
-            <Box>
+            <Box className="mt-4">
               <Button type="submit" variant="solid">
                 Submit
               </Button>

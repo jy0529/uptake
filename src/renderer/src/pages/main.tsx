@@ -32,7 +32,7 @@ export function MainPage(): JSX.Element {
           </aside>
         </Grid>
         <Grid xs={9}>
-          <main>
+          <main className="w-full">
             <Outlet />
           </main>
         </Grid>

@@ -23,6 +23,8 @@ export async function loader({ params }): Promise<ListPageParams> {
 
 export function ListPage(): JSX.Element {
   const { subscriberId } = useLoaderData() as ListPageParams
+  const loadSubscribers = useSubscriberStore((state) => state.loadSubscribers)
+  loadSubscribers()
   const subscribers = useSubscriberStore((state) => state.subscribers)
   const subscriber = subscribers.find((item) => item.id == parseInt(subscriberId))
   if (!subscriber) {
@@ -44,11 +46,17 @@ export function ListPage(): JSX.Element {
       {items.map((item) => (
         <ListItem key={item.guid}>
           <ListItemContent>
-            <Link component={RouterLink} to={`/detail/${subscriberId}/${item.title}`}>
-              <Card variant="soft">
-                <CardContent>
-                  <Typography level="title-md">{item.title}</Typography>
-                  <Typography level="body-sm" noWrap>
+            <Link
+              className="w-full"
+              component={RouterLink}
+              to={`/detail/${subscriberId}/${item.title}`}
+            >
+              <Card variant="soft" className="w-full">
+                <CardContent className="w-full">
+                  <Typography className="w-full" level="title-md">
+                    {item.title}
+                  </Typography>
+                  <Typography className="w-full" level="body-sm" noWrap={true}>
                     {item.contentSnippet}
                   </Typography>
                 </CardContent>
