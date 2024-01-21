@@ -25,7 +25,9 @@ export function MainPage(): JSX.Element {
               position: 'fixed',
               left: 0,
               width: '100%',
-              maxWidth: 200
+              maxWidth: 180,
+              height: '100%',
+              borderRight: '1px solid #ededed'
             }}
           >
             <SubscriberList changeSubscriber={changeSubscriber} />

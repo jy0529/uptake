@@ -3,7 +3,7 @@ import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import Box from '@mui/joy/Box'
 import IconButton from '@mui/joy/IconButton'
-import Add from '@mui/icons-material/Add'
+import AddBoxIcon from '@mui/icons-material/AddBox'
 import { Subscriber } from '@renderer/models/Subscriber'
 import React, { useEffect, useState } from 'react'
 import { useSubscriberStore } from '@renderer/store/subscriber'
@@ -60,32 +60,22 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
   }
 
   return (
-    <Box>
-      <Modal
-        open={open}
-        onClose={() => {
-          setOpen(false)
+    <>
+      <Box
+        className="flex flex-col"
+        sx={{
+          height: 'calc(100% - 3rem)',
+          padding: '0 0.5rem'
         }}
       >
-        <ModalDialog className="w-96 h-auto">
-          <form onSubmit={handleSubmit}>
-            <FormControl>
-              <FormLabel
-                required={true}
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '16px'
-                }}
-              >
-                name:
-              </FormLabel>
-              <Input
-                required
-                value={subscriber.name}
-                onChange={(e) => setSubscriber({ ...subscriber, name: e.target.value })}
-              />
-            </FormControl>
-            <Box className="mt-4">
+        <Modal
+          open={open}
+          onClose={() => {
+            setOpen(false)
+          }}
+        >
+          <ModalDialog className="w-96">
+            <form onSubmit={handleSubmit}>
               <FormControl>
                 <FormLabel
                   required={true}
@@ -94,54 +84,69 @@ export function SubscriberList({ changeSubscriber }: Props): JSX.Element {
                     fontSize: '16px'
                   }}
                 >
-                  rss:
+                  name:
                 </FormLabel>
                 <Input
                   required
-                  value={subscriber.rssSource}
-                  onChange={(e) => setSubscriber({ ...subscriber, rssSource: e.target.value })}
+                  value={subscriber.name}
+                  onChange={(e) => setSubscriber({ ...subscriber, name: e.target.value })}
                 />
               </FormControl>
-            </Box>
-            <Box className="mt-4">
-              <Button type="submit" variant="solid">
-                Submit
-              </Button>
-            </Box>
-          </form>
-        </ModalDialog>
-      </Modal>
-      <h2>订阅者</h2>
-      <List
+              <Box className="mt-4">
+                <FormControl>
+                  <FormLabel
+                    required={true}
+                    sx={{
+                      fontWeight: 'bold',
+                      fontSize: '16px'
+                    }}
+                  >
+                    rss:
+                  </FormLabel>
+                  <Input
+                    required
+                    value={subscriber.rssSource}
+                    onChange={(e) => setSubscriber({ ...subscriber, rssSource: e.target.value })}
+                  />
+                </FormControl>
+              </Box>
+              <Box className="mt-4">
+                <Button type="submit" variant="solid">
+                  Submit
+                </Button>
+              </Box>
+            </form>
+          </ModalDialog>
+        </Modal>
+        <h2 className="font-bold text-lg text-neutral-800">FEEDS</h2>
+        <List
+          sx={{
+            maxWidth: 320
+          }}
+        >
+          {data.map((item) => (
+            <ListItem key={item.rssSource}>
+              <ListItemButton
+                {...{ selected: item.rssSource === selectedSubscriber }}
+                onClick={() => clickHandler(item)}
+              >
+                {item.name}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box
+        className="w-full flex justify-center items-center mt-auto"
         sx={{
-          maxWidth: 320
+          boxShadow: '0 -12px 12px -9px rgb(0 0 0 / 0.1)',
+          padding: '0.25rem 0'
         }}
       >
-        <ListItem
-          startAction={
-            <IconButton size="sm" variant="plain" color="neutral">
-              <Add />
-            </IconButton>
-          }
-        >
-          <ListItemButton
-            {...{ selected: selectedSubscriber === '' }}
-            onClick={() => addSubscriberHandler()}
-          >
-            添加订阅者
-          </ListItemButton>
-        </ListItem>
-        {data.map((item) => (
-          <ListItem key={item.rssSource}>
-            <ListItemButton
-              {...{ selected: item.rssSource === selectedSubscriber }}
-              onClick={() => clickHandler(item)}
-            >
-              {item.name}
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+        <IconButton size="sm" variant="plain" color="neutral" onClick={addSubscriberHandler}>
+          <AddBoxIcon />
+        </IconButton>
+      </Box>
+    </>
   )
 }
