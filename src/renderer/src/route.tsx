@@ -2,7 +2,6 @@ import { RouteObject, createBrowserRouter } from 'react-router-dom'
 import { ListPage, loader as rssListLoader } from './pages/list'
 import ErrorPage from './pages/error'
 import { MainPage } from './pages/main'
-import { DetailPage, loader as detailPageLoader } from './pages/detail'
 
 export const routeConfig: RouteObject[] = [
   {
@@ -14,11 +13,6 @@ export const routeConfig: RouteObject[] = [
         path: '/list/:subscriberId',
         Component: ListPage,
         loader: rssListLoader
-      },
-      {
-        path: '/detail/:subscriberId/:title',
-        Component: DetailPage,
-        loader: detailPageLoader
       }
     ]
   }

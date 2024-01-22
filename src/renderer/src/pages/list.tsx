@@ -4,13 +4,15 @@ import ListItemContent from '@mui/joy/ListItemContent'
 import Typography from '@mui/joy/Typography'
 import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
+import Box from '@mui/joy/Box'
 
 import { RSSItem } from '@renderer/models/RSS'
 import { readRSS } from '@renderer/services/rss'
-import { Link as RouterLink, useLoaderData } from 'react-router-dom'
-import Link from '@mui/joy/Link'
+import { useLoaderData } from 'react-router-dom'
 import { useSubscriberStore } from '@renderer/store/subscriber'
 import { useEffect, useState } from 'react'
+
+import { RssDetail } from '@renderer/components/detail'
 
 interface ListPageParams {
   subscriberId: string
@@ -33,6 +35,8 @@ export function ListPage(): JSX.Element {
 
   const [items, setItems] = useState<RSSItem[]>([])
 
+  const setActiveRSSItem = useSubscriberStore((state) => state.setActiveRSSItem)
+
   useEffect(() => {
     const fetchRSS = async (): Promise<void> => {
       const rssResponse = await readRSS(subscriber.rssSource)
@@ -42,16 +46,16 @@ export function ListPage(): JSX.Element {
   }, [])
 
   return (
-    <List>
-      {items.map((item) => (
-        <ListItem key={item.guid}>
-          <ListItemContent>
-            <Link
-              className="w-full"
-              component={RouterLink}
-              to={`/detail/${subscriberId}/${item.title}`}
-            >
-              <Card variant="soft" className="w-full">
+    <Box className="flex items-stretch max-w-full overflow-hidden">
+      <List className="max-w-80 overflow-hidden">
+        {items.map((item) => (
+          <ListItem key={item.guid}>
+            <ListItemContent>
+              <Card
+                variant="soft"
+                className="w-full cursor-pointer"
+                onClick={() => setActiveRSSItem(item)}
+              >
                 <CardContent className="w-full">
                   <Typography className="w-full" level="title-md">
                     {item.title}
@@ -61,10 +65,11 @@ export function ListPage(): JSX.Element {
                   </Typography>
                 </CardContent>
               </Card>
-            </Link>
-          </ListItemContent>
-        </ListItem>
-      ))}
-    </List>
+            </ListItemContent>
+          </ListItem>
+        ))}
+      </List>
+      <RssDetail className="flex-1"></RssDetail>
+    </Box>
   )
 }

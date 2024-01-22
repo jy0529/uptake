@@ -18,8 +18,8 @@ export function MainPage(): JSX.Element {
         bgcolor: '#FBFCFE'
       }}
     >
-      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-        <Grid xs={3}>
+      <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+        <Grid xs={2}>
           <aside
             style={{
               position: 'fixed',
@@ -33,7 +33,7 @@ export function MainPage(): JSX.Element {
             <SubscriberList changeSubscriber={changeSubscriber} />
           </aside>
         </Grid>
-        <Grid xs={9}>
+        <Grid xs={10}>
           <main className="w-full">
             <Outlet />
           </main>
