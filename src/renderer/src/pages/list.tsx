@@ -47,7 +47,7 @@ export function ListPage(): JSX.Element {
 
   return (
     <Box className="flex items-stretch max-w-full overflow-hidden">
-      <List className="max-w-80 overflow-hidden">
+      <List className="max-w-80 overflow-y-auto max-h-screen">
         {items.map((item) => (
           <ListItem key={item.guid}>
             <ListItemContent>
@@ -69,7 +69,9 @@ export function ListPage(): JSX.Element {
           </ListItem>
         ))}
       </List>
-      <RssDetail className="flex-1"></RssDetail>
+      <Box className="overflow-y-auto max-h-screen">
+        <RssDetail className="flex-1"></RssDetail>
+      </Box>
     </Box>
   )
 }
