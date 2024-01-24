@@ -1,4 +1,4 @@
-import { RouteObject, createBrowserRouter } from 'react-router-dom'
+import { RouteObject, createHashRouter } from 'react-router-dom'
 import { ListPage, loader as rssListLoader } from './pages/list'
 import ErrorPage from './pages/error'
 import { MainPage } from './pages/main'
@@ -18,6 +18,6 @@ export const routeConfig: RouteObject[] = [
   }
 ]
 
-export const createRouter = (): ReturnType<typeof createBrowserRouter> => {
-  return createBrowserRouter(routeConfig)
+export const createRouter = (): ReturnType<typeof createHashRouter> => {
+  return createHashRouter(routeConfig)
 }
