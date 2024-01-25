@@ -1,5 +1,5 @@
-import { Subscriber } from '@renderer/models/Subscriber'
+import { Rss } from '@prisma/client'
 
-export const getAllSubscribers = (): Array<Subscriber> => {
-  return window.RssAPI.readAllRSS()
+export const getAllSubscribers = async (): Promise<Rss[]> => {
+  return await window.RssAPI.readAllRSS()
 }

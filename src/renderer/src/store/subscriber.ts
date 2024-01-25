@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import { Subscriber, SubscriberUIModel } from '@renderer/models/Subscriber'
+import { SubscriberUIModel } from '@renderer/models/Subscriber'
 import { getAllSubscribers } from '@renderer/services/subscriber'
 import { RSSItem } from '@renderer/models/RSS'
+import { Rss } from '@prisma/client'
 
 interface SubscriberState {
-  subscribers: Subscriber[]
+  subscribers: Rss[]
   addSubscriber: (subscriber: SubscriberUIModel) => void
   loadSubscribers: () => void
   activeRSSItem: RSSItem | null
@@ -15,19 +16,21 @@ interface SubscriberState {
 export const useSubscriberStore = create<SubscriberState>((set) => ({
   subscribers: [],
   activeRSSItem: null,
-  addSubscriber: (subscriber: SubscriberUIModel): void => {
-    window.RssAPI.addRSS(subscriber.name, subscriber.rssSource)
+  addSubscriber: async (subscriber: SubscriberUIModel): Promise<void> => {
+    await window.RssAPI.addRSS(subscriber.name, subscriber.rssSource)
     // reload subscribers
+    const subscribers = await getAllSubscribers()
     set(() => ({
-      subscribers: getAllSubscribers()
+      subscribers
     }))
   },
-  loadSubscribers: (): void => {
+  loadSubscribers: async (): Promise<void> => {
     if (useSubscriberStore.getState().subscribers.length > 0) {
       return
     }
+    const subscribers = await getAllSubscribers()
     set(() => ({
-      subscribers: getAllSubscribers()
+      subscribers
     }))
   },
   setActiveRSSItem: (rssItem: RSSItem): void => {

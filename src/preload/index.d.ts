@@ -1,12 +1,12 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { RSSRowDesc } from '../db/rss'
+import { Rss } from '@prisma/client'
 
 declare global {
   interface Window {
     electron: ElectronAPI
     RssAPI: {
-      addRSS: (name: string, rssSource: string) => void
-      readAllRSS: () => RSSRowDesc[]
+      addRSS: (name: string, rssSource: string) => Promise<Rss>
+      readAllRSS: () => Promise<Rss[]>
     }
   }
 }
